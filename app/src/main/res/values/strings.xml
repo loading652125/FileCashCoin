@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FileCashCoin</string>
+    <string name="title_deal">交易</string>
+    <string name="title_advertisement">广告</string>
+    <string name="title_order">订单</string>
+    <string name="title_self">我的</string>
+    <string name="advertisement_title">广告</string>
+    <string name="publish_advertisement">+ 发布广告</string>
+</resources>
