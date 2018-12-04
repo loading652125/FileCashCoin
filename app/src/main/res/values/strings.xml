@@ -6,4 +6,8 @@
     <string name="title_self">我的</string>
     <string name="advertisement_title">广告</string>
     <string name="publish_advertisement">+ 发布广告</string>
+
+    <string name="register_title">注册FCC OTC</string>
+    <string name="phone_register">手机注册</string>
+    <string name="email_register">邮箱注册</string>
 </resources>

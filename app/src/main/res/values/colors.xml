@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <!--<color name="colorPrimary">#008577</color>-->
+    <color name="colorPrimary">#FFAC1C</color>
+    <!--<color name="colorPrimaryDark">#00574B</color>-->
+    <color name="colorPrimaryDark">#FFAC1C</color>
+    <!--<color name="colorAccent">#D81B60</color>-->
+    <color name="colorAccent">#2b2b2b</color>
+
     <color name="colorBottomNavigationView">#ffffff</color>
+
+    <!--头部颜色信息-->
     <color name="toolbarColor">#FFAC1C</color>
     <color name="tabIndicatorColor">#2B2B2B</color>
     <color name="tablayout_gray">#F2F2F2</color>
     <color name="tabSelectedColor">#FF7606</color>
     <color name="tabTextColor">#808080</color>
+    <!--常用颜色-->
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorGray">#808080</color>
+    <color name="colorAppPrimary">#FFAC1C</color>
 </resources>
