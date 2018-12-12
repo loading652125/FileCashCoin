@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--系统默认-->
     <!--<color name="colorPrimary">#008577</color>-->
-    <color name="colorPrimary">#FFAC1C</color>
     <!--<color name="colorPrimaryDark">#00574B</color>-->
-    <color name="colorPrimaryDark">#FFAC1C</color>
     <!--<color name="colorAccent">#D81B60</color>-->
-    <color name="colorAccent">#2b2b2b</color>
+
+    <!--蓝色 material-->
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimaryDark">#0288D1</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="primary">#03A9F4</color>
+    <color name="primary_dark">#0288D1</color>
+    <color name="primary_light">#B3E5FC</color>
+    <color name="accent">#448AFF</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+
+    <!--橘色 material-->
+    <!--<color name="colorPrimary">#FF9800</color>-->
+    <!--<color name="colorPrimaryDark">#F57C00</color>-->
+    <!--<color name="colorAccent">#FFE0B2</color>-->
+
+    <!--<color name="primary">#FF9800</color>-->
+    <!--<color name="primary_dark">#F57C00</color>-->
+    <!--<color name="primary_light">#FFE0B2</color>-->
+    <!--<color name="accent">#FF9800</color>-->
+    <!--<color name="primary_text">#212121</color>-->
+    <!--<color name="secondary_text">#757575</color>-->
+    <!--<color name="icons">#212121</color>-->
+    <!--<color name="divider">#BDBDBD</color>-->
+
+
 
     <color name="colorBottomNavigationView">#ffffff</color>
-
     <!--头部颜色信息-->
     <color name="toolbarColor">#FFAC1C</color>
     <color name="tabIndicatorColor">#2B2B2B</color>
@@ -19,4 +45,5 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorGray">#808080</color>
     <color name="colorAppPrimary">#FFAC1C</color>
+    <color name="colorSpinner">#f8f8f8</color>
 </resources>

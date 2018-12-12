@@ -16,10 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation(name: 'geetest_sensebot_android_v3.5.7.6', ext: 'aar')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
@@ -36,4 +42,6 @@ dependencies {
     //按钮选项卡
     implementation 'lib.kingja.switchbutton:switchbutton:1.1.7'
     implementation 'com.android.support:cardview-v7:27.1.1' //gradle导入CardView支持包
+    //Spinner
+    implementation 'com.github.arcadefire:nice-spinner:1.3.4'
 }

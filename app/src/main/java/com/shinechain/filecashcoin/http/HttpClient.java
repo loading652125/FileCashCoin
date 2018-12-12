@@ -2,6 +2,8 @@ package com.shinechain.filecashcoin.http;
 
 import android.support.annotation.NonNull;
 
+import com.shinechain.filecashcoin.test.bean.PhoneLogin;
+import com.shinechain.filecashcoin.test.bean.RegisterGeetest;
 import com.shinechain.filecashcoin.test.bean.UserVO;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -65,5 +67,61 @@ public class HttpClient {
 	}
 
 	//具体请求
+
+	public static void phoneLogin(String phone,String password,final HttpCallback<PhoneLogin> callback) {
+		OkHttpUtils
+				.post()
+				.url("http://192.168.16.113:8081/v1/users/phoneLogin")
+				.addParams("phone",phone)
+				.addParams("password",password)
+				.build()
+				.execute(new JsonCallback<PhoneLogin>(PhoneLogin.class){
+
+					@Override
+					public void onError(Call call, Exception e, int id) {
+
+					}
+					@Override
+					public void onResponse(PhoneLogin response, int id) {
+						callback.onSuccess(response);
+					}
+				});
+	}
+
+
+	public static void registerGeetest(final HttpCallback<RegisterGeetest> callback){
+	    OkHttpUtils
+                .get()
+                .url("http://192.168.16.113:8081/v1/validate/registerGeetest")
+                .build()
+                .execute(new JsonCallback<RegisterGeetest>(RegisterGeetest.class){
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+                    @Override
+                    public void onResponse(RegisterGeetest response, int id) {
+                        callback.onSuccess(response);
+                    }
+                });
+    }
+	public static void registerGeetest2(final HttpCallback<String> callback){
+		OkHttpUtils
+				.get()
+				.url("http://192.168.16.113:8081/v1/validate/registerGeetest")
+				.build()
+				.execute(new StringCallback() {
+					@Override
+					public void onError(Call call, Exception e, int id) {
+
+					}
+
+					@Override
+					public void onResponse(String response, int id) {
+						callback.onSuccess(response);
+					}
+				});
+	}
 
 }
