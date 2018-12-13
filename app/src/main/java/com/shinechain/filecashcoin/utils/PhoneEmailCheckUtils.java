@@ -45,4 +45,14 @@ public class PhoneEmailCheckUtils {
         return m.matches();
     }
 
+    /**
+     * 检查密码
+     */
+    public static boolean isPasswordLegal(String str) throws PatternSyntaxException {
+        String regExp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$";
+        Pattern p =Pattern.compile(regExp);
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
+
 }

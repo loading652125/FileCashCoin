@@ -33,7 +33,8 @@ public class LoginAndRegiste {
 //            }
 //        });
         //System.out.println(PhoneEmailCheckUtils.isPhoneLegal("159860254861"));
-        System.out.println(PhoneEmailCheckUtils.isEmailLegal("loading652125@163.com"));
+        //System.out.println(PhoneEmailCheckUtils.isEmailLegal("loading652125@163.com"));
+        System.out.println(PhoneEmailCheckUtils.isPasswordLegal("asdXfghjkl1"));
 
 
     }

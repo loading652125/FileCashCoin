@@ -1,10 +1,10 @@
-package com.shinechain.filecashcoin.test.bean;
+package com.shinechain.filecashcoin.bean;
 
 /**
  * Created by zjs on 2018/12/10 17:52
  * Describe:
  */
-public class JWT extends Result {
+public class CommonResult extends Result {
     private String data;
 
     public String getData() {

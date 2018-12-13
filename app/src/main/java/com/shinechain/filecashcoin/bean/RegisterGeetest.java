@@ -1,4 +1,4 @@
-package com.shinechain.filecashcoin.test.bean;
+package com.shinechain.filecashcoin.bean;
 
 import com.google.gson.annotations.SerializedName;
 

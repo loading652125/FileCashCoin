@@ -17,8 +17,8 @@ import com.google.gson.JsonObject;
 import com.shinechain.filecashcoin.R;
 import com.shinechain.filecashcoin.http.HttpInterceptor;
 import com.shinechain.filecashcoin.http.JsonCallback;
-import com.shinechain.filecashcoin.test.bean.JWT;
-import com.shinechain.filecashcoin.test.bean.LoginResult;
+import com.shinechain.filecashcoin.bean.CommonResult;
+import com.shinechain.filecashcoin.bean.LoginResult;
 import com.shinechain.filecashcoin.utils.MD5Utils;
 import com.shinechain.filecashcoin.utils.PhoneEmailCheckUtils;
 import com.shinechain.filecashcoin.utils.SPUtils;
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String validateGeetest = "http://192.168.16.113:8081/v1/validate/validateGeetest";
     private static final String phoneLogin = "http://192.168.16.113:8081/v1/users/phoneLogin";
     private static final String emailLogin = "http://192.168.16.113:8081/v1/users/emailLogin";
-    public static final String loginCallback = "http://192.168.16.113:8080/v1/users/loginCallback";
+    private static final String loginCallback = "http://192.168.16.113:8080/v1/users/loginCallback";
 
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private JSONObject jsonObject;
@@ -239,6 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     });
                                     //拿取JWT
+                                    Log.i(TAG,uuid);
                                     getJWT(uuid);
                                 } else {
                                     gt3GeetestUtils.gt3TestClose();
@@ -260,13 +261,13 @@ public class LoginActivity extends AppCompatActivity {
                 .url(loginCallback)
                 .addParams("code",uuid)
                 .build()
-                .execute(new JsonCallback<JWT>(JWT.class){
+                .execute(new JsonCallback<CommonResult>(CommonResult.class){
                     @Override
                     public void onError(Call call, Exception e, int id) {
 
                     }
                     @Override
-                    public void onResponse(JWT response, int id) {
+                    public void onResponse(CommonResult response, int id) {
                         if (new Integer(200).equals(response.getStatus()) && new Integer(10000).equals(response.getCode())) {
                             String data = response.getData();
                             if (!TextUtils.isEmpty(data)) {
