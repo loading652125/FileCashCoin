@@ -264,6 +264,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Result response, int id) {
                         if (new Integer(200).equals(response.getStatus()) && new Integer(10004).equals(response.getCode())) {
+                            Log.i(TAG,"检测功能--->"+response.getMsg());
                             //表示用户已注册，可以发送验证码
                             //sendVerificationCode();
                             if (flag == 1) {
@@ -311,6 +312,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Result response, int id) {
                         if (new Integer(200).equals(response.getStatus()) && new Integer(10000).equals(response.getCode())) {
+                            Log.i(TAG,"重置--->"+response.getMsg());
                             backgroundThreadShortSnackbar(cardView,response.getMsg());
                         }
                     }
@@ -535,6 +537,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     Snackbar.make(view,msg,Snackbar.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (gt3GeetestUtils != null) {
+            gt3GeetestUtils.gt3TestClose();
         }
     }
 }

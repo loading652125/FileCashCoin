@@ -336,7 +336,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //这里去那设置
                 validateCode.setGeetestUserId(userId);
                 validateCode.setGtServerStatus("1");
-                System.out.println(new Gson().toJson(validateCode));
+                Log.i(TAG,new Gson().toJson(validateCode));
                 OkHttpUtils
                         .postString()
                         .url(sendCaptcha)
@@ -374,7 +374,7 @@ public class RegisterActivity extends AppCompatActivity {
                         });
             }
             else {
-                System.out.println("无法发送验证码请求");
+                Log.i(TAG,"无法发送验证码请求");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -621,7 +621,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (!TextUtils.isEmpty(data)) {
                                 SPUtils.put(RegisterActivity.this,"jwt",data);
                                 Log.i(TAG,"保存登录信息成功");
-                                System.out.println(SPUtils.get(RegisterActivity.this, "jwt", ""));
+                                Log.i(TAG,SPUtils.get(RegisterActivity.this, "jwt", ""));
                                 backgroundThreadShortSnackbar(cardView,"注册成功");
                                 // TODO 延时跳转主页面
                             }else {
