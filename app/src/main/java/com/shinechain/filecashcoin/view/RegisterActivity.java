@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,7 +20,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.geetest.sdk.Bind.GT3GeetestBindListener;
 import com.geetest.sdk.Bind.GT3GeetestUtilsBind;
 import com.geetest.sdk.GTCallBack;
@@ -58,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String checkPhone = "http://192.168.16.113:8081/v1/users/checkPhone";
     private static final String checkUsername = "http://192.168.16.113:8081/v1/users/checkUsername";
     private static final String phoneRegister = "http://192.168.16.113:8081/v1/users/phoneRegister";
+    private static final String emailRegister = "http://192.168.16.113:8081/v1/users/emailRegister";
     private static final String loginCallback = "http://192.168.16.113:8080/v1/users/loginCallback";
 
     private GT3GeetestUtilsBind gt3GeetestUtils;
@@ -88,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText email;
     private String emailString;
     private CardView cardView;
+    private Toolbar toolbar;
 
 
     @Override
@@ -102,8 +105,8 @@ public class RegisterActivity extends AppCompatActivity {
     private void initView() {
         registerWayText = findViewById(R.id.register_way_textview);
         //后面根据地区代码来生成
-        niceSpinner = (NiceSpinner) findViewById(R.id.spinner);
-        areaList = new LinkedList<>(Arrays.asList("+86(China)", "+852(Hong Kong)","+886(Taiwan)"));
+        niceSpinner = findViewById(R.id.spinner);
+        areaList = new LinkedList<>(Arrays.asList("+86(China)", "+852(Hong Kong)"));
         niceSpinner.attachDataSource(areaList);
         phoneGetCodeBtn = findViewById(R.id.register_get_code_button);
         //获取
@@ -118,6 +121,11 @@ public class RegisterActivity extends AppCompatActivity {
         emialConstrainLayout = findViewById(R.id.register_email_constrainlayout);
         email = findViewById(R.id.register_email_email_edittext);
         cardView = findViewById(R.id.register_cardview);
+        toolbar = findViewById(R.id.reset_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void bindListener() {
@@ -144,13 +152,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //判断是手机还是邮箱
+                phoneGetCodeBtn.setClickable(false);
                 boolean isSendCode = false;
                 //手机注册，不为空，没有错误提示
                 if ( registerFlag == 1) {
                     if ( phoneLayout.getError() == null && !TextUtils.isEmpty(phone.getText().toString().trim()) ){
                         isSendCode = true;
                     }else {
-                        Toast.makeText(RegisterActivity.this,"手机号码有误，请检查！",Toast.LENGTH_SHORT).show();
+                        backgroundThreadShortSnackbar(cardView,"手机号码有误，请检查！");
+                        phoneGetCodeBtn.setClickable(true);
                         return;
                     }
                 } else if (registerFlag == 2) {
@@ -158,7 +168,8 @@ public class RegisterActivity extends AppCompatActivity {
                     if ( !TextUtils.isEmpty(emailString) && PhoneEmailCheckUtils.isEmailLegal(emailString)) {
                         isSendCode = true;
                     } else {
-                        Toast.makeText(RegisterActivity.this,"邮箱有误，请检查！",Toast.LENGTH_SHORT).show();
+                        backgroundThreadShortSnackbar(cardView,"邮箱有误，请检查！");
+                        phoneGetCodeBtn.setClickable(true);
                         return;
                     }
                 }
@@ -170,6 +181,16 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         registerNow.setOnClickListener(new RegisterClickListener());
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (gt3GeetestUtils != null) {
+                    gt3GeetestUtils.gt3TestClose();
+                }
+                finish();
+            }
+        });
+
     }
 
     private void initGeetTest() {
@@ -347,9 +368,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     countTimer = new MyCountTimer(60*1000, 1000);
                                     countTimer.start();
                                     //发送验证码成功
-                                    Looper.prepare();
-                                    Toast.makeText(getApplicationContext(),"验证码已发送",Toast.LENGTH_SHORT);
-                                    Looper.loop();
+                                    backgroundThreadShortSnackbar(cardView,"验证码发送成功");
                                 }
                             }
                         });
@@ -365,7 +384,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        countTimer.cancel();
+        if (countTimer != null){
+            countTimer.cancel();
+        }
         if (gt3GeetestUtils != null) {
             gt3GeetestUtils.gt3TestClose();
         }
@@ -391,11 +412,11 @@ public class RegisterActivity extends AppCompatActivity {
             if (passwordString.equals(confirmString)) {
                 boolean isPasswordLegal = PhoneEmailCheckUtils.isPasswordLegal(passwordString);
                 if (!isPasswordLegal) {
-                    Toast.makeText(RegisterActivity.this,"密码不符合规范",Toast.LENGTH_SHORT);
+                    backgroundThreadShortSnackbar(cardView,"密码不符合规范");
                     return;
                 }
             }else {
-                Toast.makeText(RegisterActivity.this,"密码不一致",Toast.LENGTH_SHORT);
+                backgroundThreadShortSnackbar(cardView,"密码不一致");
                 return;
             }
             //先做密码检测，再执行异步检查用户名
@@ -456,6 +477,8 @@ public class RegisterActivity extends AppCompatActivity {
             phoneGetCodeBtn.setText("获取验证码");
             phoneGetCodeBtn.setBackgroundColor(getResources().getColor(R.color.primary));
         }
+
+
     }
 
     //检查手机号码
@@ -516,7 +539,7 @@ public class RegisterActivity extends AppCompatActivity {
                             } else {
                                 if (!TextUtils.isEmpty(response.getMsg())) {
                                     //表示用户名不对
-                                    backgroupThreadShortSnackbar(cardView,response.getMsg());
+                                    backgroundThreadShortSnackbar(cardView,response.getMsg());
                                     return;
                                 }
                             }
@@ -545,7 +568,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerUrl = phoneRegister;
         } else {
             registerJsonObject.addProperty("email",emailString);
-            registerUrl = emailString;
+            registerUrl = emailRegister;
         }
         registerJsonObject.addProperty("captcha", verificationString);
         registerJsonObject.addProperty("username", usernameString);
@@ -599,16 +622,16 @@ public class RegisterActivity extends AppCompatActivity {
                                 SPUtils.put(RegisterActivity.this,"jwt",data);
                                 Log.i(TAG,"保存登录信息成功");
                                 System.out.println(SPUtils.get(RegisterActivity.this, "jwt", ""));
-                                Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
-                                // TODO 跳转登录页面
+                                backgroundThreadShortSnackbar(cardView,"注册成功");
+                                // TODO 延时跳转主页面
                             }else {
 
                             }
                         } else {
                             if (response.getDevIfno() != null){
-                                Toast.makeText(RegisterActivity.this,response.getDevIfno(),Toast.LENGTH_SHORT).show();
+                                backgroundThreadShortSnackbar(cardView,response.getDevIfno());
                             }else {
-                                Toast.makeText(RegisterActivity.this,response.getMsg(),Toast.LENGTH_SHORT).show();
+                                backgroundThreadShortSnackbar(cardView,response.getMsg());
                             }
                         }
                     }
@@ -636,7 +659,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void backgroupThreadShortSnackbar(final View view ,final String msg){
+    private void backgroundThreadShortSnackbar(final View view ,final String msg){
         if (view != null && msg != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
 

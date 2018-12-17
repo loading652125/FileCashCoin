@@ -25,9 +25,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.HomeActivity" />
-        <activity android:name=".view.LoginActivity" />
+        <activity
+            android:name=".view.LoginActivity"
+            android:theme="@style/MyTheme" />
         <!-- <activity android:name=".view.RegisterActivity" /> -->
-        <activity android:name=".view.RegisterActivity"></activity>
+        <activity
+            android:name=".view.RegisterActivity"
+            android:theme="@style/MyTheme" />
+        <activity android:name=".view.ResetPasswordActivity"></activity>
     </application>
 
 </manifest>

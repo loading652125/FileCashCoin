@@ -1,14 +1,21 @@
 package com.shinechain.filecashcoin.view;
 
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+
 import com.geetest.sdk.Bind.GT3GeetestBindListener;
 import com.geetest.sdk.Bind.GT3GeetestUtilsBind;
 import com.geetest.sdk.GTCallBack;
@@ -33,17 +40,6 @@ import okhttp3.OkHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
 
-    static {
-        //超时时间为10秒
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.MILLISECONDS)
-                .readTimeout(10000, TimeUnit.MILLISECONDS)
-                .writeTimeout(10000, TimeUnit.MILLISECONDS)
-                .addInterceptor(new HttpInterceptor())
-                .build();
-        OkHttpUtils.initClient(okHttpClient);
-    }
-
     public static final String TAG = LoginActivity.class.getSimpleName();
     private static final String registerGeetest = "http://192.168.16.113:8081/v1/validate/registerGeetest";
     private static final String validateGeetest = "http://192.168.16.113:8081/v1/validate/validateGeetest";
@@ -62,25 +58,30 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isEmailString;
     private String usernameString;
     private String passwordString;
+    private TextView forgetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login2);
-        //
-        gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
-        // 设置debug模式，开代理抓包可使用，默认关闭，TODO 生产环境务必设置为false
-        gt3GeetestUtils.setDebug(true);
-        // 设置加载webview超时时间，单位毫秒，默认15000，仅且webview加载静态文件超时，不包括之前的http请求
-        gt3GeetestUtils.setTimeout(15000);
-        // 设置webview请求超时(用户点选或滑动完成，前端请求后端接口)，单位毫秒，默认10000
-        gt3GeetestUtils.setWebviewTimeout(10000);
+        setContentView(R.layout.activity_login);
+        initView();
+        bindListener();
+        initGeetTest();
+    }
+
+    private void initView() {
         username = findViewById(R.id.login_username_edittext);
         password = findViewById(R.id.login_password_edittext);
         loginBtn = findViewById(R.id.login_btn);
         register = findViewById(R.id.register_btn);
         cardView = findViewById(R.id.login_cardview);
+        forgetPassword = findViewById(R.id.login_forget_password_textview);
+        SpannableString spannableString =  new SpannableString(forgetPassword.getText().toString().trim());
+        spannableString.setSpan(new UnderlineSpan(),0,forgetPassword.getText().toString().trim().length(),0);
+        forgetPassword.setText(spannableString);
+    }
 
+    private void bindListener() {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,23 +89,47 @@ public class LoginActivity extends AppCompatActivity {
                 usernameString = username.getText().toString().trim();
                 passwordString = password.getText().toString().trim();
                 if (!TextUtils.isEmpty(usernameString) && !TextUtils.isEmpty(passwordString)) {
-                    //判断手机还是密码登录
+                    //判断手机还是邮箱登录
                     isPhoneString = PhoneEmailCheckUtils.isChinaPhoneLegal(usernameString);
                     isEmailString = PhoneEmailCheckUtils.isEmailLegal(usernameString);
                     if (!isPhoneString && !isEmailString) {
-                        Snackbar.make(cardView,"请输入正确手机号码或者邮箱",Snackbar.LENGTH_INDEFINITE).show();
+                        backgroundThreadShortSnackbar(cardView,"请输入正确手机号码或者邮箱");
                         return;
                     }
                     //极验验证
                     startCustomVerify();
                 } else {
                     //用户名或者密码为空
-                    Snackbar.make(cardView,"用户名或者密码为空",Snackbar.LENGTH_SHORT).show();
+                    backgroundThreadShortSnackbar(cardView,"用户名或者密码为空");
                 }
             }
         });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //注册页面
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+            }
+        });
 
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //跳转页面
+            }
+        });
     }
+
+    private void initGeetTest() {
+        gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
+        // 设置debug模式，开代理抓包可使用，默认关闭
+        gt3GeetestUtils.setDebug(false);
+        // 设置加载webview超时时间，单位毫秒，默认15000，仅且webview加载静态文件超时，不包括之前的http请求
+        gt3GeetestUtils.setTimeout(15000);
+        // 设置webview请求超时(用户点选或滑动完成，前端请求后端接口)，单位毫秒，默认10000
+        gt3GeetestUtils.setWebviewTimeout(10000);
+    }
+
 
     private void startCustomVerify() {
         gt3GeetestUtils.showLoadingDialog(this, null);
@@ -286,6 +311,18 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void backgroundThreadShortSnackbar(final View view ,final String msg){
+        if (view != null && msg != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Snackbar.make(view,msg,Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 }
